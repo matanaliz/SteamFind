@@ -9,6 +9,9 @@ __pycache__/
 # SteamFind key file
 *.key
 
+# Ignore database
+*.db
+
 # C extensions
 *.so
 
