@@ -6,6 +6,9 @@ __pycache__/
 # Pycharm workspace files
 .idea/
 
+# SteamFind key file
+*.key
+
 # C extensions
 *.so
 
