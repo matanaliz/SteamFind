@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Coop finder</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="static/bootstrap.min.css" rel="stylesheet" media="screen">
+</head>
+<body>
+    <h1>Welcome, {{ user.name }}!</h1>
+    <h2>Friendlist: </h2>
+    {% for friend in friends %}
+    <div>
+        <td><img src="{{ friend.avatar }}"></td>
+        <td>{{ friend.name }}</td>
+        <!--{% for game in friend.games %}-->
+        <!--<td>{{ game.gamename }}</td>-->
+        <!--{% endfor %}-->
+    </div>
+    {% endfor %}
+</body>
+</html>
