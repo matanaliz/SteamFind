@@ -91,7 +91,8 @@ class Game:
 
 
 def get_player(steamid):
-    summary = get_player_summary([steamid])
+
+    summary = get_player_summary(steamid)
 
     player = Player()
     player.steamid = steamid
@@ -143,6 +144,9 @@ def get_common_games(steamid, games):
 
 @LogInOut
 def get_player_summary(steamids):
+    if not isinstance(steamids, list):
+        steamids = [steamids]
+
     id_string = ",".join(steamids)
     request = steamApp.ISteamUser.GetPlayerSummaries_v2(key=steamKey, steamids=id_string)
     player_list = request['response']['players']
