@@ -24,8 +24,11 @@ class LogInOut(object):
             print('Result: ')
 
             if results:
-                for res in enumerate(results):
-                    print("{}".format(res))
+                if isinstance(results, str):
+                    print(results)
+                else:
+                    for res in enumerate(results):
+                        print("{}".format(res))
             else:
                     print("None")
         else:
@@ -34,11 +37,11 @@ class LogInOut(object):
 
 
 class Player:
-    def __init__(self):
-        self._steamid = ''
-        self._name = ''
-        self._avatar = ''
-        self._games = {}
+    def __init__(self, steamid='', name='', avatar='', games=[]):
+        self._steamid = steamid
+        self._name = name
+        self._avatar = avatar
+        self._games = games
 
     def __repr__(self):
         attrs = vars(self)
@@ -85,8 +88,55 @@ class Player:
 
 
 class Game:
-    def __init__(self):
-        pass
+    def __init__(self, appid='', name='', logo='', icon=''):
+        self._appid = appid
+        self._name = name
+        self._logo_url = logo
+        self._icon_url = icon
+
+    def __repr__(self):
+        attrs = vars(self)
+        return ', '.join("%s: %s" % item for item in attrs.items())
+
+    def __str__(self):
+        attrs = vars(self)
+        return ', '.join("%s: %s" % item for item in attrs.items())
+
+    @property
+    def appid(self):
+        return self._appid
+
+    @appid.setter
+    def appid(self, value):
+        self._appid = value
+
+    @property
+    def name(self):
+        return self._name
+
+    @name.setter
+    def name(self, value):
+        self._name = value
+
+    @property
+    def logo(self):
+        return self._logo_url
+
+    @logo.setter
+    def logo(self, value):
+        self._logo_url = "http://media.steampowered.com/" + \
+                         "steamcommunity/public/images/" + \
+                         "apps/" + str(self._appid) + "/" + value + ".jpg"
+
+    @property
+    def icon(self):
+        return self._icon_url
+
+    @icon.setter
+    def icon(self, value):
+        self._icon_url = "http://media.steampowered.com/" + \
+                         "steamcommunity/public/images/" + \
+                         "apps/" + str(self._appid) + "/" + value + ".jpg"
 
 
 def get_player(steamid):
@@ -113,27 +163,33 @@ def get_friends(player):
 def get_owned_games(player):
     request = steamApp.IPlayerService.GetOwnedGames(
             appids_filter=None,
-            include_appinfo=True,
-            include_played_free_games=True,
+            # True is not working as a flag
+            include_appinfo=1,
+            include_played_free_games=1,
             key=steamKey,
             steamid=player.steamid)
     if 'games' in request['response'].keys():
-        games = sorted(request['response']['games'], key=lambda g: g['playtime_forever'], reverse=True)
-        player.games = [g['appid'] for g in games]
-        return player.games
+        response_games = sorted(request['response']['games'], key=lambda g: g['playtime_forever'], reverse=True)
+        games = []
+        for g in response_games:
+            game = Game(
+                appid=g['appid'],
+                name=g['name'])
+
+            # TODO move link construction to ctor?
+            game.icon = g['img_icon_url']
+            game.logo = g['img_logo_url']
+
+            games.append(game)
+
+        return games
     else:
         return []
 
 
 @LogInOut
-def get_common_games(steamid, games):
-    common = []
-    for game in games:
-        if game in get_owned_games(steamid):
-            request = steamApp.ISteamUserStats.GetSchemaForGame_v2(appid=game, key=steamKey)
-            common.append(request['game']['gameName'])
-
-    return common
+def get_common_games(player, friend):
+    return player.games in friend.games
 
 
 @LogInOut
@@ -147,11 +203,10 @@ def get_player_summary(steamids):
 
     players = []
     for player in response_player_list:
-        players.append(Player(
-            steamid=player['steamid'],
-            name=player['personaname'],
-            avatar=player['avatar']
-        ))
+        p = Player(steamid=player['steamid'],
+                   name=player['personaname'],
+                   avatar=player['avatar'])
+        players.append(p)
 
     return players
 

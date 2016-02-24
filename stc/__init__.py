@@ -9,8 +9,8 @@ keypath = os.path.join(basedir, 'steamapi.key')
 
 def get_key():
     if os.path.isfile(keypath):
-        f = open(keypath, 'r')
-        return str(f.readline())
+        with open(keypath, 'r') as f:
+            return str(f.readline())
     return None
 
 

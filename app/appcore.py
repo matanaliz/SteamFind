@@ -8,7 +8,7 @@ def get_player(steamid):
     if not player:
         # Player was not found in DB
         p = steamcore.get_player(steamid)
-        player = models.Player(steamid=steamid,
+        player = models.Player(steamid=p.steamid,
                                name=p.name,
                                avatar=p.avatar)
 
@@ -31,7 +31,7 @@ def get_player(steamid):
                 db.session.commit()
 
             # Add player as friend of current
-            player.befriend(f)
+            player.add_friend(f)
 
     db.session.commit()
     return player
@@ -43,6 +43,26 @@ def resolve_nickname(nickname):
 
 
 def get_games(player):
-    if not player.games:
-        # Get games appids
-        g = steamcore.get_owned_games(player.steamid)
+    #if not player.games:
+
+    # Get games appids
+    games = steamcore.get_owned_games(player)
+    # Fill up DB with games
+    for game in games:
+        g = models.Game.query.get(game.appid)
+        if not g:
+            g = models.Game(appid=game.appid,
+                            name=game.name,
+                            logo=game.logo,
+                            icon=game.icon)
+
+            # Add new game to DB
+            db.session.add(g)
+            db.session.commit()
+
+        # Add game to gamelist of player
+        player.add_game(g)
+
+    db.session.commit()
+
+    return models.Player.query.get(player.steamid).games

@@ -18,8 +18,17 @@ def info(username):
         return redirect('/')
 
     player = appcore.get_player(steamid)
+    games = appcore.get_games(player)
+
+    common = {}
+    #{friend.steamid : games in appcore.get_games(friend) for friend in }
+    for friend in player.friends:
+        com = games in appcore.get_games(friend)
+        common[friend.steamid] = com
 
     return render_template('info.html',
                            user=player.__dict__,
-                           friends=player.friends)
+                           friends=player.friends,
+                           games=games,
+                           commons=common)
 

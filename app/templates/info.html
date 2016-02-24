@@ -7,11 +7,26 @@
 </head>
 <body>
     <h1>Welcome, {{ user.name }}!</h1>
+    <h2>Gamelist: </h2>
+    <table>
+        <tr>
+        {% for game in games %}
+            <th><img src="{{ game.icon }}"></th>
+            {% if loop.index is divisibleby 20 %}
+                </tr>
+                <tr>
+            {% endif%}
+        {% endfor %}
+         </tr>
+    </table>
     <h2>Friendlist: </h2>
     {% for friend in friends %}
     <div>
         <td><img src="{{ friend.avatar }}"></td>
         <td>{{ friend.name }}</td>
+        {% for game in commons['friend.steamid'] %}
+            <th><img src="{{ game.icon }}"></th>
+        {% endfor %}
         <!--{% for game in friend.games %}-->
         <!--<td>{{ game.gamename }}</td>-->
         <!--{% endfor %}-->

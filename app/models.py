@@ -43,15 +43,21 @@ class Player(db.Model):
     def __repr__(self):
         return "<Player {}>".format(self.name)
 
-    def befriend(self, friend):
+    def add_friend(self, friend):
         if friend not in self.friends:
             self.friends.append(friend)
+
+    def add_game(self, game):
+        if game not in self.games:
+            self.games.append(game)
 
 
 class Game(db.Model):
     __tablename__ = 'game'
     appid = db.Column(db.String(32), primary_key=True)
-    name = db.Column(db.String(32), index=True)
+    name = db.Column(db.String(255), index=True)
+    logo = db.Column(db.String(255))
+    icon = db.Column(db.String(255))
 
     def __repr__(self):
         return '<Game {} {}>'.format(self.appid, self.name)
