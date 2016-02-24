@@ -81,7 +81,6 @@ class Player:
         self._games = value
 
     def get_common_with(self, player):
-
         pass
 
 
@@ -91,14 +90,9 @@ class Game:
 
 
 def get_player(steamid):
-
     summary = get_player_summary(steamid)
-
-    player = Player()
-    player.steamid = steamid
-    player.name = summary[0]['personaname']
-    player.avatar = summary[0]['avatar']
-    return player
+    # Get first player from list
+    return summary[0]
 
 
 @LogInOut
@@ -149,9 +143,17 @@ def get_player_summary(steamids):
 
     id_string = ",".join(steamids)
     request = steamApp.ISteamUser.GetPlayerSummaries_v2(key=steamKey, steamids=id_string)
-    player_list = request['response']['players']
+    response_player_list = request['response']['players']
 
-    return player_list
+    players = []
+    for player in response_player_list:
+        players.append(Player(
+            steamid=player['steamid'],
+            name=player['personaname'],
+            avatar=player['avatar']
+        ))
+
+    return players
 
 
 @LogInOut
