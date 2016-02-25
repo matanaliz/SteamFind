@@ -11,7 +11,11 @@
     <table>
         <tr>
         {% for game in games %}
-            <th><img src="{{ game.icon }}"></th>
+            <th>
+                <a href="http://store.steampowered.com/app/{{ game.appid }}/" target="_blank">
+                    <img src="{{ game.icon }}" title="{{ game.name }}">
+                </a>
+            </th>
             {% if loop.index is divisibleby 20 %}
                 </tr>
                 <tr>
@@ -27,9 +31,11 @@
                 <th><img  src="{{ friend.avatar }}"></th>
                 <th><h3>{{ friend.name }}</h3></th>
             </tr>
+        </table>
+        <table>
             <tr>
             {% for game in commons[friend.steamid] %}
-                <th>
+                <th style="width:32px">
                     <a href="http://store.steampowered.com/app/{{ game.appid }}/" target="_blank">
                         <img width="32" height="32" border="0" align="center" src="{{ game.icon }}" title="{{ game.name }}">
                     </a>
