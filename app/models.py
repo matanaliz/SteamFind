@@ -55,7 +55,7 @@ class Player(db.Model):
 class Game(db.Model):
     __tablename__ = 'game'
     appid = db.Column(db.String(32), primary_key=True)
-    name = db.Column(db.String(255), index=True)
+    name = db.Column(db.String(64), index=True)
     logo = db.Column(db.String(255))
     icon = db.Column(db.String(255))
 

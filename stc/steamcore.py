@@ -124,9 +124,10 @@ class Game:
 
     @logo.setter
     def logo(self, value):
-        self._logo_url = "http://media.steampowered.com/" + \
-                         "steamcommunity/public/images/" + \
-                         "apps/" + str(self._appid) + "/" + value + ".jpg"
+        if value:
+            self._logo_url = "http://media.steampowered.com/" + \
+                            "steamcommunity/public/images/" + \
+                            "apps/" + str(self._appid) + "/" + value + ".jpg"
 
     @property
     def icon(self):
@@ -134,9 +135,10 @@ class Game:
 
     @icon.setter
     def icon(self, value):
-        self._icon_url = "http://media.steampowered.com/" + \
-                         "steamcommunity/public/images/" + \
-                         "apps/" + str(self._appid) + "/" + value + ".jpg"
+        if value:
+            self._icon_url = "http://media.steampowered.com/" + \
+                            "steamcommunity/public/images/" + \
+                            "apps/" + str(self._appid) + "/" + value + ".jpg"
 
 
 def get_player(steamid):

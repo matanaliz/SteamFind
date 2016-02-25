@@ -22,14 +22,25 @@
     <h2>Friendlist: </h2>
     {% for friend in friends %}
     <div>
-        <td><img src="{{ friend.avatar }}"></td>
-        <td>{{ friend.name }}</td>
-        {% for game in commons['friend.steamid'] %}
-            <th><img src="{{ game.icon }}"></th>
-        {% endfor %}
-        <!--{% for game in friend.games %}-->
-        <!--<td>{{ game.gamename }}</td>-->
-        <!--{% endfor %}-->
+        <table>
+            <tr>
+                <th><img  src="{{ friend.avatar }}"></th>
+                <th><h3>{{ friend.name }}</h3></th>
+            </tr>
+            <tr>
+            {% for game in commons[friend.steamid] %}
+                <th>
+                    <a href="http://store.steampowered.com/app/{{ game.appid }}/" target="_blank">
+                        <img width="32" height="32" border="0" align="center" src="{{ game.icon }}" title="{{ game.name }}">
+                    </a>
+                </th>
+                {% if loop.index is divisibleby 20 %}
+                    </tr>
+                    <tr>
+                {% endif%}
+            {% endfor %}
+            </tr>
+        </table>
     </div>
     {% endfor %}
 </body>

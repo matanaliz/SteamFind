@@ -18,17 +18,26 @@ def info(username):
         return redirect('/')
 
     player = appcore.get_player(steamid)
-    games = appcore.get_games(player)
 
+    # Remove all games without icon
+    player_games = []
+    for g in appcore.get_games(player):
+        if g.icon:
+            player_games.append(g)
+
+    # This is horrible!
     common = {}
-    #{friend.steamid : games in appcore.get_games(friend) for friend in }
     for friend in player.friends:
-        com = games in appcore.get_games(friend)
-        common[friend.steamid] = com
+        friend_games = appcore.get_games(friend)
+        common[friend.steamid] = []
+        for game in friend_games:
+            if any(g.appid == game.appid for g in player_games):
+                if game.icon:
+                    common[friend.steamid].append(game)
 
     return render_template('info.html',
                            user=player.__dict__,
                            friends=player.friends,
-                           games=games,
+                           games=player_games,
                            commons=common)
 

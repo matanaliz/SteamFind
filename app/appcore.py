@@ -43,8 +43,6 @@ def resolve_nickname(nickname):
 
 
 def get_games(player):
-    #if not player.games:
-
     # Get games appids
     games = steamcore.get_owned_games(player)
     # Fill up DB with games
@@ -65,4 +63,4 @@ def get_games(player):
 
     db.session.commit()
 
-    return models.Player.query.get(player.steamid).games
+    return models.Player.query.get(player.steamid).games.all()
