@@ -20,10 +20,7 @@ def info(username):
     player = appcore.get_player(steamid)
 
     # Remove all games without icon
-    player_games = []
-    for g in appcore.get_games(player):
-        if g.icon:
-            player_games.append(g)
+    player_games = [g for g in appcore.get_games() if g.icon]
 
     # This is horrible!
     common = {}
